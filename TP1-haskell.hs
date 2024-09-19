@@ -112,14 +112,14 @@ sufijos = foldr (\c acc -> (c : if null (head acc) then [] else head acc) : acc)
 
 --Ejercicio 4
 preorder :: AT a -> [a]
-preorder = foldAT(\r i c d -> [r] ++ i ++ c ++ d) []
+preorder = foldAT(\r i c d -> r : (i ++ c ++ d)) []
 
 
 inorder :: AT a -> [a]
 inorder = foldAT(\r i c d -> (i ++ c ++ [r] ++ d)) []
 
 postorder :: AT a -> [a]
-postorder = foldAT(\r i c d ->  [r] ++ d ++ c ++ i) []
+postorder = foldAT(\r i c d -> reverse (r : (d ++ c ++ i))) []
  
 --Ejercicio 5
 
@@ -175,8 +175,8 @@ main = do runTestTT allTests
 allTests = test [ -- Reemplazar los tests de prueba por tests propios
   "ejercicio1" ~: testsEj1,
   "ejercicio2" ~: testsEj2
-  --"ejercicio3" ~: testsEj3,
-  --"ejercicio4" ~: testsEj4,
+  "ejercicio3" ~: testsEj3,
+  "ejercicio4" ~: testsEj4,
   --"ejercicio5" ~: testsEj5,
   --"ejercicio6" ~: testsEj6,
   --"ejercicio7" ~: testsEj7,
@@ -206,14 +206,20 @@ testsEj2 = test [
     foldAT (\r i c d -> r : (i ++ c ++ d))  [] (Tern 1 (Tern 2 Nil Nil Nil) Nil (Tern 4 Nil Nil Nil))  ~=?  [1, 2, 4]
   ]
 
-{- testsEj3 = test [ -- Casos de test para el ejercicio 3
-  'a'      -- Caso de test 1 - expresión a testear
-    ~=? 'a'            -- Caso de test 1 - resultado esperado
+testsEj3 = test [ 
+ unoxuno [3,1,4,1,5,9] ~=? [[3],[1],[4],[1],[5],[9]],
+ unoxuno [] ~=? [],
+ sufijos "Plp" ~=? ["Plp", "lp", "p", ""],
+ sufijos "" ~=? [""]
   ]
 
-testsEj4 = test [ -- Casos de test para el ejercicio 4
-  ""       -- Caso de test 1 - expresión a testear
-    ~=? ""                             -- Caso de test 1 - resultado esperado
+testsEj4 = test [ 
+  preorder (Tern 16 (Tern 1 (Tern 9 Nil Nil Nil) (Tern 7 Nil Nil Nil) (Tern 2 Nil Nil Nil)) (Tern 14 (Tern 0 Nil Nil Nil) (Tern 3 Nil Nil Nil) (Tern 6 Nil Nil Nil)) (Tern 10 (Tern 8 Nil Nil Nil) (Tern 5 Nil Nil Nil) (Tern 4 Nil Nil Nil))) ~=? [16,1,9,7,2,14,0,3,6,10,8,5,4],
+  preorder (Nil) ~=? []
+  postorder (Tern 16 (Tern 1 (Tern 9 Nil Nil Nil) (Tern 7 Nil Nil Nil) (Tern 2 Nil Nil Nil)) (Tern 14 (Tern 0 Nil Nil Nil) (Tern 3 Nil Nil Nil) (Tern 6 Nil Nil Nil)) (Tern 10 (Tern 8 Nil Nil Nil) (Tern 5 Nil Nil Nil) (Tern 4 Nil Nil Nil))) ~=? [9,7,2,1,0,3,6,14,8,5,4,10,16],
+  postorder (Nil) ~=? []
+  inorder (Tern 16 (Tern 1 (Tern 9 Nil Nil Nil) (Tern 7 Nil Nil Nil) (Tern 2 Nil Nil Nil)) (Tern 14 (Tern 0 Nil Nil Nil) (Tern 3 Nil Nil Nil) (Tern 6 Nil Nil Nil)) (Tern 10 (Tern 8 Nil Nil Nil) (Tern 5 Nil Nil Nil) (Tern 4 Nil Nil Nil))) ~=? [9,7,1,2,0,3,14,6,16,8,5,10,4],
+  inorder (Nil) ~=? []
   ]
 
 testsEj5 = test [ -- Casos de test para el ejercicio 5
